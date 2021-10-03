@@ -4,8 +4,11 @@ import com.example.wherewego.domain.Member;
 import com.example.wherewego.dto.MemberDto;
 import com.example.wherewego.dto.UpdateMemberDto;
 import com.example.wherewego.exception.ApiRequestException;
+import com.example.wherewego.exception.ErrorResponse;
 import com.example.wherewego.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,11 +39,21 @@ public class MemberService {
     }
 
     private void validateDuplicateMember(MemberDto memberDto) {
+        //중복 이메일
         List<Member> findMembers = memberRepository.findByEmail(memberDto.getEmail());
         if (!findMembers.isEmpty()) {
             throw new ApiRequestException("이미 존재하는 회원입니다.");
         }
+
+        //중복 이름, 번호 (동명이인 존재할 수 있기 때문에 이름, 번호 동시에 확인)
+        List<Member> findMembersByName = memberRepository.findByName(memberDto.getName());
+        for (Member member : findMembersByName) {
+            if (member.getPhone().equals(memberDto.getPhone())) {
+                throw new ApiRequestException("이미 존재하는 회원입니다.");
+            }
+        }
     }
+
 
     //전체 회원 조회
     @Transactional(readOnly = true)
@@ -85,12 +98,27 @@ public class MemberService {
         }
     }
 
-    //회원 찾기(이메일, 휴대전화)
-    public void findByPhone(Member member, String phone) {
-        String findPhone = member.getPhone();
-        if (!findPhone.equals(phone)) {
-            throw new ApiRequestException("휴대전화가 일치하지 않습니다.");
+    //회원 찾기(이름, 휴대전화)
+    public Member findMemberByNameAndPhone(String name, String phone) {
+        List<Member> memberList = memberRepository.findByName(name);
+        if (memberList.isEmpty()) {
+            throw new ApiRequestException("해당 회원이 존재하지 않습니다.");
         }
+        for (Member member : memberList) {
+            if (phone.equals(member.getPhone())) {
+                return member;
+            }
+        }
+        throw new ApiRequestException("휴대전화가 일치하지 않습니다.");
+    }
+
+    public Member findMemberPwByEmailAndNameAndPhone(String email, String name, String phone) {
+        List<Member> memberList = memberRepository.findByEmail(email);
+        if (memberList.isEmpty()) {
+            throw new ApiRequestException("해당 회원이 존재하지 않습니다.");
+        }
+        Member member = memberList.get(0);
+        return findMemberByNameAndPhone(name, phone);
     }
 
     //회원찾기(이름)
@@ -116,11 +144,12 @@ public class MemberService {
         }
 
         Member member = memberRepository.findOne(memberId);
+
         String password = passwordEncoder.encode(pw1);
 
         member.setPw(password);
         member.setName(name);
         member.setAddress(address);
-        member.setPw(phone);
+        member.setPhone(phone);
     }
 }

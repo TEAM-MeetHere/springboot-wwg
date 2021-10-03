@@ -1,15 +1,24 @@
 package com.example.wherewego.controller;
 
 import com.example.wherewego.domain.Member;
+import com.example.wherewego.dto.LoginDto;
 import com.example.wherewego.dto.MemberDto;
 import com.example.wherewego.dto.UpdateMemberDto;
+import com.example.wherewego.response.DefaultRes;
+import com.example.wherewego.response.ResponseMessage;
+import com.example.wherewego.response.StatusCode;
 import com.example.wherewego.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
@@ -25,38 +34,51 @@ public class MemberController {
 
     //로그인
     @GetMapping("/members/login")
-    public Member getMemberByEmail(@RequestParam String email, @RequestParam String pw) {
-        Member member = memberService.findByEmail(email).get(0);
-        memberService.checkPw(member.getPw(), pw);
-        return member;
+    public ResponseEntity getMemberByEmail(@RequestBody LoginDto loginDto) {
+        Member member = memberService.findByEmail(loginDto.getEmail()).get(0);
+        memberService.checkPw(member.getPw(), loginDto.getPw());
+        return new ResponseEntity(DefaultRes.res(StatusCode.OK,
+                ResponseMessage.LOGIN_SUCCESS, loginDto), HttpStatus.OK);
     }
 
     //회원가입
     @PostMapping("/members")
-    public Member postMember(@RequestBody @Valid MemberDto memberDto) {
-        return memberService.join(memberDto);
+    public ResponseEntity postMember(@RequestBody @Valid MemberDto memberDto, BindingResult result) {
+
+        if (result.hasErrors()) {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+
+        Member member = memberService.join(memberDto);
+        return new ResponseEntity(DefaultRes.res(StatusCode.CREATED,
+                ResponseMessage.CREATED_USER, memberDto), HttpStatus.CREATED);
     }
 
-    //아이디 찾기(이메일, 휴대전화)
-    @PostMapping("/members/findId")
-    public Member findMemberId(@RequestParam String email, @RequestParam String phone) {
-        Member member = memberService.findByEmail(email).get(0);
-        memberService.findByPhone(member, phone);
-        return member;
+    //아이디 찾기(이름, 휴대전화)
+    @GetMapping("/members/findId")
+    public ResponseEntity findMemberId(@RequestParam String name, @RequestParam String phone) {
+        String findEmail = memberService.findMemberByNameAndPhone(name, phone).getEmail();
+        return new ResponseEntity(DefaultRes.res(StatusCode.OK,
+                ResponseMessage.READ_USER, findEmail), HttpStatus.FOUND);
     }
 
     //비밀번호 찾기(이메일, 이름, 휴대전화)
-    @PostMapping("/members/findPw")
-    public Member findMembersPw(@RequestParam String email, @RequestParam String name, @RequestParam String phone) {
-        Member member = memberService.findByEmail(email).get(0);
-        memberService.findByName(member, name);
-        memberService.findByPhone(member, phone);
-        return member;
+    @GetMapping("/members/findPw")
+    public ResponseEntity findMembersPw(@RequestParam String email, @RequestParam String name, @RequestParam String phone) {
+        Member member = memberService.findMemberPwByEmailAndNameAndPhone(email, name, phone);
+        return new ResponseEntity(DefaultRes.res(StatusCode.OK,
+                ResponseMessage.READ_USER, member), HttpStatus.OK);
     }
 
     //회원정보 수정
-    @GetMapping("/members/update")
+    @PostMapping("/members/update")
     public void updateMember(@RequestBody @Valid UpdateMemberDto updateMemberDto) {
         memberService.updateMember(updateMemberDto);
+    }
+
+    //회원 탈퇴
+    @DeleteMapping("/members/delete")
+    public void deleteMember(@RequestParam Long memberId) {
+        memberService.deleteMember(memberId);
     }
 }

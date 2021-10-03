@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +23,7 @@ public class Member extends Timestamped {
     @Column(name = "MEM_ID")
     private Long id;
 
-    @Column(name = "MEM_EMAIL")
+    @Column(name = "MEM_EMAIL", unique = true)
     private String email;
 
     @Column(name = "MEM_PW")
