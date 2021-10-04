@@ -62,7 +62,7 @@ public class Member extends Timestamped {
             throw new ApiRequestException("이메일은 필수 입력 값입니다.");
         }
         if (memberDto.getPw() == null || memberDto.getPw().isEmpty()) {
-            throw new ApiRequestException("비밀번호는 피리수 입력 값입니다.");
+            throw new ApiRequestException("비밀번호는 필수 입력 값입니다.");
         }
         if (memberDto.getName() == null || memberDto.getName().isEmpty()) {
             throw new ApiRequestException("이름은 필수 입력 값입니다.");

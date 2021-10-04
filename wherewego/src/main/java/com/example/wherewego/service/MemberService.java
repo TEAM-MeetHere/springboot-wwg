@@ -130,7 +130,7 @@ public class MemberService {
     }
 
     //회원 정보 수정
-    public void updateMember(UpdateMemberDto updateMemberDto) {
+    public Member updateMember(UpdateMemberDto updateMemberDto) {
 
         Long memberId = updateMemberDto.getMemberId();
         String pw1 = updateMemberDto.getPw1();
@@ -151,5 +151,7 @@ public class MemberService {
         member.setName(name);
         member.setAddress(address);
         member.setPhone(phone);
+
+        return member;
     }
 }
