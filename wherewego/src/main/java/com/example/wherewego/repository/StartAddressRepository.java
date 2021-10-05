@@ -1,6 +1,7 @@
 package com.example.wherewego.repository;
 
 import com.example.wherewego.domain.StartAddress;
+import com.example.wherewego.dto.StartAddressDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

@@ -32,10 +32,10 @@ public class Bookmark extends Timestamped {
     private List<StartAddress> startAddressList = new ArrayList<>();
 
     //== 생성 메서드 ==//
-    public static Bookmark createBookmark(Member member, Bookmark bookmarkDto) {
+    public static Bookmark createBookmark(Member member, String destination) {
         Bookmark bookmark = new Bookmark();
         bookmark.setMember(member);
-        bookmark.setDestination(bookmarkDto.getDestination());
+        bookmark.setDestination(destination);
         return bookmark;
     }
 

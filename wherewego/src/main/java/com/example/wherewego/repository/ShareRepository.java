@@ -30,5 +30,10 @@ public class ShareRepository {
                 .getResultList();
     }
 
-    //
+    //공유코드로 목록 확인
+    public List<Share> findShareByRandomCode(String randomCode){
+        return em.createQuery("select s from Share s where s.code =:randomCode")
+                .setParameter("randomCode", randomCode)
+                .getResultList();
+    }
 }

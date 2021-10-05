@@ -38,7 +38,9 @@ public class MemberController {
 
     //로그인
     @GetMapping("/members/login")
-    public ResponseEntity getMemberByEmail(@Validated @RequestBody LoginDto loginDto, BindingResult result) {
+    public ResponseEntity getMemberByEmail(@Validated
+                                               @RequestBody LoginDto loginDto,
+                                           BindingResult result) {
 
         ResponseEntity errorResponse = checkBindingResultError(result);
         if (errorResponse != null) return errorResponse;
@@ -51,7 +53,9 @@ public class MemberController {
 
     //회원가입
     @PostMapping("/members")
-    public ResponseEntity postMember(@Validated(ValidationSequence.class) @RequestBody MemberDto memberDto, BindingResult result) {
+    public ResponseEntity postMember(@Validated(ValidationSequence.class)
+                                         @RequestBody MemberDto memberDto,
+                                     BindingResult result) {
 
         ResponseEntity errorResponse = checkBindingResultError(result);
         if (errorResponse != null) return errorResponse;
@@ -63,7 +67,8 @@ public class MemberController {
 
     //아이디 찾기(이름, 휴대전화)
     @GetMapping("/members/findId")
-    public ResponseEntity findMemberId(@RequestParam String name, @RequestParam String phone) {
+    public ResponseEntity findMemberId(@RequestParam String name,
+                                       @RequestParam String phone) {
         String findEmail = memberService.findMemberByNameAndPhone(name, phone).getEmail();
         return new ResponseEntity(DefaultRes.res(StatusCode.OK,
                 ResponseMessage.READ_USER, findEmail), HttpStatus.FOUND);
@@ -71,7 +76,9 @@ public class MemberController {
 
     //비밀번호 찾기(이메일, 이름, 휴대전화)
     @GetMapping("/members/findPw")
-    public ResponseEntity findMembersPw(@RequestParam String email, @RequestParam String name, @RequestParam String phone) {
+    public ResponseEntity findMembersPw(@RequestParam String email,
+                                        @RequestParam String name,
+                                        @RequestParam String phone) {
         Member member = memberService.findMemberPwByEmailAndNameAndPhone(email, name, phone);
         String tempPw = "qwe123!@#";
         String tempMessage = tempPw + " 로 임시 비밀번호가 설정되었습니다.";
@@ -82,7 +89,9 @@ public class MemberController {
 
     //회원정보 수정
     @PostMapping("/members/update")
-    public ResponseEntity updateMember(@Validated(ValidationSequence.class) @RequestBody UpdateMemberDto updateMemberDto, BindingResult result) {
+    public ResponseEntity updateMember(@Validated(ValidationSequence.class)
+                                           @RequestBody UpdateMemberDto updateMemberDto,
+                                       BindingResult result) {
         ResponseEntity errorResponse = checkBindingResultError(result);
         if (errorResponse != null) return errorResponse;
         Member member = memberService.updateMember(updateMemberDto);

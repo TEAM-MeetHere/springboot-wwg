@@ -15,7 +15,7 @@ public class StartAddress {
 
     @Id
     @GeneratedValue
-    @Column(name = "SA_ID")
+    @Column(name = "ST_ID")
     private Long id;
 
     @JsonIgnore
@@ -23,10 +23,10 @@ public class StartAddress {
     @JoinColumn(name = "BOOK_ID")
     private Bookmark bookmark;
 
-    @Column(name = "SA_NAME")
+    @Column(name = "ST_NAME")
     private String name;
 
-    @Column(name = "SA_ADDRESS")
+    @Column(name = "ST_ADDRESS")
     private String address;
 
     //== 연관관계 메서드 ==//
@@ -36,7 +36,7 @@ public class StartAddress {
     }
 
     //== 생성 메서드 ==//
-    public static StartAddress createBookmarkAddress(Bookmark bookmark, StartAddressDto startAddressDto) {
+    public static StartAddress createStartAddress(Bookmark bookmark, StartAddressDto startAddressDto) {
         StartAddress startAddress = new StartAddress();
         startAddress.setBookmark(bookmark);
         startAddress.setName(startAddressDto.getName());

@@ -10,4 +10,10 @@ public class ResponseMessage {
     public static final String DELETE_USER = "회원 탈퇴 성공";
     public static final String INTERNAL_SERVER_ERROR = "서버 내부 에러";
     public static final String DB_ERROR = "데이터베이스 에러";
+
+    public static final String BOOKMARK_INSERT_SUCCESS = "즐겨찾기 저장 성공";
+    public static final String BOOKMARK_SEARCH_SUCCESS = "즐겨찾기 조회 성공";
+
+    public static final String RANDOMCODE_CREATED = "랜덤코드 생성 성공";
+    public static final String RANCOMCODE_SEARCH_SUCCESS = "랜덤코드 내용 조회 성공";
 }

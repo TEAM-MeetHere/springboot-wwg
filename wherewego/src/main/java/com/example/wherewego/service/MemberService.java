@@ -145,6 +145,10 @@ public class MemberService {
 
         Member member = memberRepository.findOne(memberId);
 
+        if (member == null) {
+            throw new ApiRequestException("해당 회원이 존재하지 않습니다.");
+        }
+
         String password = passwordEncoder.encode(pw1);
 
         member.setPw(password);
