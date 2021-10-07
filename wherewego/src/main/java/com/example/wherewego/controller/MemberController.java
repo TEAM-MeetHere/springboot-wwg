@@ -2,12 +2,15 @@ package com.example.wherewego.controller;
 
 import com.example.wherewego.domain.Member;
 import com.example.wherewego.dto.LoginDto;
+import com.example.wherewego.dto.MailDto;
 import com.example.wherewego.dto.MemberDto;
 import com.example.wherewego.dto.UpdateMemberDto;
+import com.example.wherewego.exception.ApiRequestException;
 import com.example.wherewego.exception.ErrorResponse;
 import com.example.wherewego.response.DefaultRes;
 import com.example.wherewego.response.ResponseMessage;
 import com.example.wherewego.response.StatusCode;
+import com.example.wherewego.service.EmailService;
 import com.example.wherewego.service.MemberService;
 import com.example.wherewego.valid.ValidationGroups;
 import com.example.wherewego.valid.ValidationSequence;
@@ -21,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Random;
 
 @Slf4j
 @RestController
@@ -29,6 +33,7 @@ import java.util.List;
 public class MemberController {
 
     private final MemberService memberService;
+    private final EmailService emailService;
 
     //전체 회원 리스트
     @GetMapping("/memberList")
@@ -46,12 +51,16 @@ public class MemberController {
         if (errorResponse != null) return errorResponse;
 
         Member member = memberService.findByEmail(loginDto.getEmail()).get(0);
+        if (member.getActive() != 1) {
+            throw new ApiRequestException("해당 회원이 존재하지 않습니다.");
+        }
+
         memberService.checkPw(member.getPw(), loginDto.getPw());
         return new ResponseEntity(DefaultRes.res(StatusCode.OK,
                 ResponseMessage.LOGIN_SUCCESS, member), HttpStatus.OK);
     }
 
-    //회원가입
+    //회원가입 과정
     @PostMapping("/members")
     public ResponseEntity postMember(@Validated(ValidationSequence.class)
                                          @RequestBody MemberDto memberDto,
@@ -60,9 +69,27 @@ public class MemberController {
         ResponseEntity errorResponse = checkBindingResultError(result);
         if (errorResponse != null) return errorResponse;
 
-        Member member = memberService.join(memberDto);
+        Random random = new Random(System.currentTimeMillis());
+        int code = 100000 + random.nextInt(900000);
+        int active = -1;
+        MailDto mailDto = emailService.verification(memberDto.getEmail(), memberDto.getName(), code);
+        emailService.mailSend(mailDto);
+
+        memberService.join(memberDto, active, code);
         return new ResponseEntity(DefaultRes.res(StatusCode.CREATED,
-                ResponseMessage.CREATED_USER, memberDto), HttpStatus.CREATED);
+                ResponseMessage.SEND_CODE, memberDto), HttpStatus.CREATED);
+    }
+
+    //회원가입 인증
+    @PostMapping("/members/verify")
+    public ResponseEntity register(@RequestParam String email, int code) {
+
+        if (memberService.activateMember(email, code)) {
+            return new ResponseEntity(DefaultRes.res(StatusCode.CREATED,
+                    ResponseMessage.CREATED_USER, "회원가입 완료"), HttpStatus.CREATED);
+        }
+        return new ResponseEntity(DefaultRes.res(StatusCode.BAD_REQUEST,
+                ResponseMessage.VERIFY_FAIL, "인증 오류"), HttpStatus.BAD_REQUEST);
     }
 
     //아이디 찾기(이름, 휴대전화)
@@ -82,7 +109,10 @@ public class MemberController {
         Member member = memberService.findMemberPwByEmailAndNameAndPhone(email, name, phone);
         String tempPw = "qwe123!@#";
         String tempMessage = tempPw + " 로 임시 비밀번호가 설정되었습니다.";
-        member.setPw(tempPw);
+        MailDto mailDto = emailService.createMailAndChangePassword(email, name, tempPw);
+        emailService.mailSend(mailDto);
+
+
         return new ResponseEntity(DefaultRes.res(StatusCode.OK,
                 ResponseMessage.UPDATE_USER, tempMessage), HttpStatus.OK);
     }

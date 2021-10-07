@@ -8,7 +8,6 @@ import com.example.wherewego.response.DefaultRes;
 import com.example.wherewego.response.ResponseMessage;
 import com.example.wherewego.response.StatusCode;
 import com.example.wherewego.service.BookmarkService;
-import com.example.wherewego.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

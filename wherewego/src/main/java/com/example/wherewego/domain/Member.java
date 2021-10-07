@@ -38,6 +38,12 @@ public class Member extends Timestamped {
     @Column(name = "MEM_PHONE")
     private String phone;
 
+    @Column(name = "MEM_VERIFICATION")
+    private int verification;
+
+    @Column(name = "MEM_ACTIVE")
+    private int active;
+
     @JsonIgnore
     @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Bookmark> bookmarkList = new ArrayList<>();

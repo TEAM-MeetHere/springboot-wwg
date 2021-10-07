@@ -14,6 +14,17 @@ spring:
         #        show_sql: true #시스템 아웃으로 출력
         format_sql: true
 
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: adcdm87@gmail.com
+    password: eamktstumiwmymks
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
 logging:
   level:
