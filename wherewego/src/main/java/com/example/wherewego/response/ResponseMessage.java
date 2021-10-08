@@ -19,5 +19,5 @@ public class ResponseMessage {
     public static final String RANCOMCODE_SEARCH_SUCCESS = "랜덤코드 내용 조회 성공";
 
     public static final String SEND_CODE = "인증번호 발송";
-    public static final String VERIFY_FAIL = "옳바른 인증번호가 아닙니다.";
+    public static final String VERIFY_FAIL = "올바른 인증번호가 아닙니다.";
 }

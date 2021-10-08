@@ -108,7 +108,7 @@ public class MemberController {
                                         @RequestParam String phone) {
         Member member = memberService.findMemberPwByEmailAndNameAndPhone(email, name, phone);
         String tempPw = "qwe123!@#";
-        String tempMessage = tempPw + " 로 임시 비밀번호가 설정되었습니다.";
+        String tempMessage = "비밀번호가 재설정되었습니다. 임시 비밀번호는 이메일로 전송되었습니다.";
         MailDto mailDto = emailService.createMailAndChangePassword(email, name, tempPw);
         emailService.mailSend(mailDto);
 
