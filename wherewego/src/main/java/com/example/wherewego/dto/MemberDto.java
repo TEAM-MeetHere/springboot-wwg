@@ -33,4 +33,6 @@ public class MemberDto {
             message = "번호의 형식에 맞게 입력해주세요.",
             groups = ValidationGroups.PatternCheckGroup.class)
     private String phone;
+
+    private String snsType;
 }

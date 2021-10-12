@@ -4,11 +4,8 @@ import com.example.wherewego.domain.Member;
 import com.example.wherewego.dto.MemberDto;
 import com.example.wherewego.dto.UpdateMemberDto;
 import com.example.wherewego.exception.ApiRequestException;
-import com.example.wherewego.exception.ErrorResponse;
 import com.example.wherewego.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -73,7 +70,7 @@ public class MemberService {
     @Transactional(readOnly = true)
     public List<Member> findByEmail(String email) {
 
-        //회원 존재 여부 확인
+        //회원 미존재 여부 확인, 미존재시 에러
         validateNotExistMember(email);
 
         //회원이 존재한다면

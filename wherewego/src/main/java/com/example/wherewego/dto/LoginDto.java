@@ -18,4 +18,6 @@ public class LoginDto {
 
     @NotEmpty(message = "비밀번호를 입력하세요.")
     private String pw;
+
+    private String snsType;
 }

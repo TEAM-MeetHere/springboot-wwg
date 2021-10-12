@@ -12,7 +12,6 @@ import com.example.wherewego.response.ResponseMessage;
 import com.example.wherewego.response.StatusCode;
 import com.example.wherewego.service.EmailService;
 import com.example.wherewego.service.MemberService;
-import com.example.wherewego.valid.ValidationGroups;
 import com.example.wherewego.valid.ValidationSequence;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +21,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 import java.util.Random;
 
@@ -68,6 +66,11 @@ public class MemberController {
 
         ResponseEntity errorResponse = checkBindingResultError(result);
         if (errorResponse != null) return errorResponse;
+
+//        List<Member> memberList = memberService.findByEmail(memberDto.getEmail());
+//        if (!memberList.isEmpty() && memberList.get(0).getActive() == 1) {
+//            throw new ApiRequestException("이미 존재하는 회원입니다.");
+//        }
 
         Random random = new Random(System.currentTimeMillis());
         int code = 100000 + random.nextInt(900000);

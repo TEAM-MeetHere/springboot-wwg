@@ -7,8 +7,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,6 +42,9 @@ public class Member extends Timestamped {
     @Column(name = "MEM_ACTIVE")
     private int active;
 
+    @Column(name = "MEM_SNS_TYPE")
+    private String snsType;
+
     @JsonIgnore
     @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Bookmark> bookmarkList = new ArrayList<>();
@@ -60,6 +61,7 @@ public class Member extends Timestamped {
         member.setName(memberDto.getName());
         member.setAddress(memberDto.getAddress());
         member.setPhone(memberDto.getPhone());
+        member.setSnsType(memberDto.getSnsType());
         return member;
     }
 
