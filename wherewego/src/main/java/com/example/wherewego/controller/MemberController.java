@@ -40,10 +40,10 @@ public class MemberController {
     }
 
     //로그인
-    @GetMapping("/members/login")
+    @PostMapping("/members/login")
     public ResponseEntity getMemberByEmail(@Validated
                                                @RequestBody LoginDto loginDto,
-                                           BindingResult result) {
+                                         BindingResult result) {
 
         ResponseEntity errorResponse = checkBindingResultError(result);
         if (errorResponse != null) return errorResponse;
@@ -66,11 +66,6 @@ public class MemberController {
 
         ResponseEntity errorResponse = checkBindingResultError(result);
         if (errorResponse != null) return errorResponse;
-
-//        List<Member> memberList = memberService.findByEmail(memberDto.getEmail());
-//        if (!memberList.isEmpty() && memberList.get(0).getActive() == 1) {
-//            throw new ApiRequestException("이미 존재하는 회원입니다.");
-//        }
 
         Random random = new Random(System.currentTimeMillis());
         int code = 100000 + random.nextInt(900000);

@@ -19,8 +19,7 @@ public class ApiExceptionHandler {
 
         return new ResponseEntity<>(
                 apiException,
-                HttpStatus.BAD_REQUEST
-                // HTTP 400 -> Client Error
+                HttpStatus.OK
         );
     }
 }
