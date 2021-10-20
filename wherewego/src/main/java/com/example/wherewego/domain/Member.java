@@ -3,17 +3,20 @@ package com.example.wherewego.domain;
 import com.example.wherewego.dto.MemberDto;
 import com.example.wherewego.exception.ApiRequestException;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
 @Setter
+@Builder
 @Table(name = "MEMBER")
+@AllArgsConstructor
+@NoArgsConstructor
 public class Member extends Timestamped {
 
     @Id
@@ -39,8 +42,8 @@ public class Member extends Timestamped {
     @Column(name = "MEM_VERIFICATION")
     private int verification;
 
-    @Column(name = "MEM_ACTIVE")
-    private int active;
+    @Column(name = "MEM_ACTIVATED")
+    private String activated;
 
     @Column(name = "MEM_SNS_TYPE")
     private String snsType;
@@ -48,6 +51,13 @@ public class Member extends Timestamped {
     @JsonIgnore
     @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Bookmark> bookmarkList = new ArrayList<>();
+
+    /*@ManyToOne
+    @JoinTable(
+            name = "user_authority",
+            joinColumns = {@JoinColumn(name = "MEM_ID", referencedColumnName = "MEM_ID")},
+            inverseJoinColumns = {@JoinColumn(name = "AUTH_NAME", referencedColumnName = "AUTH_NAME")})
+    private Set<Authority> authorities;*/
 
     //== 생성 메서드==//
     public static Member createMember(MemberDto memberDto) {

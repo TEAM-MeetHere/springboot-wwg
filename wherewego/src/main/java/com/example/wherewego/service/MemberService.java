@@ -22,7 +22,7 @@ public class MemberService {
 
     //회원가입
     @Transactional //디비 적용
-    public Member join(MemberDto memberDto, int active, int code) {
+    public Member join(MemberDto memberDto, String activated, int code) {
 
         //중복 회원 검증, 중복 이메일 확인
         validateDuplicateMember(memberDto);
@@ -31,7 +31,7 @@ public class MemberService {
         Member member = Member.createMember(memberDto);
         String password = passwordEncoder.encode(member.getPw());
         member.setPw(password);
-        member.setActive(active);
+        member.setActivated(activated);
         member.setVerification(code);
         memberRepository.save(member);
         return member;
@@ -40,7 +40,7 @@ public class MemberService {
     private void validateDuplicateMember(MemberDto memberDto) {
         //중복 이메일
         List<Member> findMembers = memberRepository.findByEmail(memberDto.getEmail());
-        if (!findMembers.isEmpty() && findMembers.get(0).getActive() == 1) {
+        if (!findMembers.isEmpty() && findMembers.get(0).getActivated() == "TRUE") {
             throw new ApiRequestException("이미 존재하는 회원입니다.");
         }
 
@@ -162,7 +162,7 @@ public class MemberService {
     public boolean activateMember(String email, int code) {
         Member member = memberRepository.findByEmail(email).get(0);
         if (member.getVerification() == code) {
-            member.setActive(1);
+            member.setActivated("TRUE");
             return true;
         }
         return false;

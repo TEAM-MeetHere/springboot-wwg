@@ -1,10 +1,7 @@
 package com.example.wherewego.controller;
 
 import com.example.wherewego.domain.Member;
-import com.example.wherewego.dto.LoginDto;
-import com.example.wherewego.dto.MailDto;
-import com.example.wherewego.dto.MemberDto;
-import com.example.wherewego.dto.UpdateMemberDto;
+import com.example.wherewego.dto.*;
 import com.example.wherewego.exception.ApiRequestException;
 import com.example.wherewego.exception.ErrorResponse;
 import com.example.wherewego.response.DefaultRes;
@@ -49,7 +46,7 @@ public class MemberController {
         if (errorResponse != null) return errorResponse;
 
         Member member = memberService.findByEmail(loginDto.getEmail()).get(0);
-        if (member.getActive() != 1) {
+        if (member.getActivated() == "FALSE") {
             throw new ApiRequestException("해당 회원이 존재하지 않습니다.");
         }
 
@@ -69,7 +66,7 @@ public class MemberController {
 
         Random random = new Random(System.currentTimeMillis());
         int code = 100000 + random.nextInt(900000);
-        int active = -1;
+        String active = "FALSE";
         MailDto mailDto = emailService.verification(memberDto.getEmail(), memberDto.getName(), code);
         emailService.mailSend(mailDto);
 
@@ -80,8 +77,9 @@ public class MemberController {
 
     //회원가입 인증
     @PostMapping("/members/verify")
-    public ResponseEntity register(@RequestParam String email, int code) {
-
+    public ResponseEntity register(@RequestBody VerifyDto verifyDto) {
+        String email = verifyDto.getEmail();
+        int code = verifyDto.getCode();
         if (memberService.activateMember(email, code)) {
             return new ResponseEntity(DefaultRes.res(StatusCode.CREATED,
                     ResponseMessage.CREATED_USER, "회원가입 완료"), HttpStatus.CREATED);
