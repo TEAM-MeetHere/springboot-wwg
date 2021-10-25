@@ -44,7 +44,7 @@ public class BookmarkController {
     public ResponseEntity bookmarkList(@RequestParam Long memberId) {
         List<Bookmark> bookmarkList = bookmarkService.findBookmarkList(memberId);
         return new ResponseEntity(DefaultRes.res(StatusCode.OK,
-                ResponseMessage.BOOKMARK_SEARCH_SUCCESS, bookmarkList), HttpStatus.FOUND);
+                ResponseMessage.BOOKMARK_SEARCH_SUCCESS, bookmarkList), HttpStatus.OK);
     }
 
     //즐겨찾기 불러오기

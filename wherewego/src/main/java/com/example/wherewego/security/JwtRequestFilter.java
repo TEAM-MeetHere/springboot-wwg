@@ -1,5 +1,6 @@
 package com.example.wherewego.security;
 
+import com.example.wherewego.exception.JwtRequestException;
 import com.example.wherewego.service.JwtUserDetailsService;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                     Arrays.asList(
                             "/api/members",
                             "/authenticate",
-                            "/api/members/verify"
+                            "/api/members/verify",
+                            "/api/members/findId",
+                            "/api/members/findPw"
                     )
             );
 
@@ -49,12 +52,15 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             try {
                 email = jwtTokenUtil.getUsernameFromToken(jwtToken);
             } catch (IllegalArgumentException e) {
-                System.out.println("JWT TOKEN 불러오기 불가능");
+                logger.warn("JWT TOKEN 불러오기 불가능");
+                throw new JwtRequestException("JWT TOKEN 불러오기 불가능");
             } catch (ExpiredJwtException e) {
-                System.out.println("JWT TOKEN 만료됨");
+                logger.warn("JWT TOKEN 만료됨");
+                throw new JwtRequestException("JWT TOKEN 만료됨");
             }
         } else {
             logger.warn("JWT TOKEN does not begin with Bearer String");
+            throw new JwtRequestException("JWT TOKEN does not begin with Bearer String");
         }
 
 
@@ -67,6 +73,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }
+        }else{
+            throw new JwtRequestException("인증 에러 JwtRequestFilter - doFilterInternal");
         }
         filterChain.doFilter(request, response);
     }

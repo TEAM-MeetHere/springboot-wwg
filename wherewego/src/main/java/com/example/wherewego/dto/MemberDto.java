@@ -2,6 +2,8 @@ package com.example.wherewego.dto;
 
 import com.example.wherewego.valid.ValidationGroups;
 import lombok.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;

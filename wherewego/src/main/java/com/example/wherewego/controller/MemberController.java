@@ -39,14 +39,15 @@ public class MemberController {
     //로그인
     @PostMapping("/members/login")
     public ResponseEntity getMemberByEmail(@Validated
-                                               @RequestBody LoginDto loginDto,
-                                         BindingResult result) {
+                                           @RequestBody LoginDto loginDto,
+                                           BindingResult result) {
 
         ResponseEntity errorResponse = checkBindingResultError(result);
         if (errorResponse != null) return errorResponse;
 
         Member member = memberService.findByEmail(loginDto.getEmail()).get(0);
-        if (member.getActivated() == "FALSE") {
+
+        if (member == null || member.getActivated() == "FALSE") {
             throw new ApiRequestException("해당 회원이 존재하지 않습니다.");
         }
 
@@ -58,19 +59,36 @@ public class MemberController {
     //회원가입 과정
     @PostMapping("/members")
     public ResponseEntity postMember(@Validated(ValidationSequence.class)
-                                         @RequestBody MemberDto memberDto,
+                                     @RequestBody MemberDto memberDto,
                                      BindingResult result) {
 
         ResponseEntity errorResponse = checkBindingResultError(result);
         if (errorResponse != null) return errorResponse;
 
+        List<Member> findMembers = memberService.findByEmail(memberDto.getEmail());
+
+        //기존 이메일이 db에 존재한다면
+        if (!findMembers.isEmpty()) {
+            //인증 절차 진행 안된 이메일이라면, 이전 이메일 삭제
+            if (findMembers.get(0).getActivated().equals("FALSE")) {
+                memberService.deleteMember(findMembers.get(0).getId());
+            }
+            //인증 절차 완료된 이메일 이라면, 해당 요청 에러 응답 (이미 존재하는 회원)
+            else {
+                throw new ApiRequestException("이미 존재하는 회원입니다.");
+            }
+        }
+
         Random random = new Random(System.currentTimeMillis());
         int code = 100000 + random.nextInt(900000);
         String active = "FALSE";
-        MailDto mailDto = emailService.verification(memberDto.getEmail(), memberDto.getName(), code);
+
+        Member member = memberService.join(memberDto, active, code);
+
+        MailDto mailDto = emailService.verification(memberDto.getEmail(), memberDto.getName(), member.getVerification());
         emailService.mailSend(mailDto);
 
-        memberService.join(memberDto, active, code);
+//        memberService.join(memberDto, active, code);
         return new ResponseEntity(DefaultRes.res(StatusCode.CREATED,
                 ResponseMessage.SEND_CODE, memberDto), HttpStatus.CREATED);
     }
@@ -85,7 +103,7 @@ public class MemberController {
                     ResponseMessage.CREATED_USER, "회원가입 완료"), HttpStatus.CREATED);
         }
         return new ResponseEntity(DefaultRes.res(StatusCode.BAD_REQUEST,
-                ResponseMessage.VERIFY_FAIL, "인증 오류"), HttpStatus.BAD_REQUEST);
+                ResponseMessage.VERIFY_FAIL, "인증 오류"), HttpStatus.OK);
     }
 
     //아이디 찾기(이름, 휴대전화)
@@ -94,7 +112,7 @@ public class MemberController {
                                        @RequestParam String phone) {
         String findEmail = memberService.findMemberByNameAndPhone(name, phone).getEmail();
         return new ResponseEntity(DefaultRes.res(StatusCode.OK,
-                ResponseMessage.READ_USER, findEmail), HttpStatus.FOUND);
+                ResponseMessage.READ_USER, findEmail), HttpStatus.OK);
     }
 
     //비밀번호 찾기(이메일, 이름, 휴대전화)
@@ -110,13 +128,13 @@ public class MemberController {
 
 
         return new ResponseEntity(DefaultRes.res(StatusCode.OK,
-                ResponseMessage.UPDATE_USER, tempMessage), HttpStatus.OK);
+                ResponseMessage.UPDATE_USER_PASSWORD, tempMessage), HttpStatus.OK);
     }
 
     //회원정보 수정
     @PostMapping("/members/update")
     public ResponseEntity updateMember(@Validated(ValidationSequence.class)
-                                           @RequestBody UpdateMemberDto updateMemberDto,
+                                       @RequestBody UpdateMemberDto updateMemberDto,
                                        BindingResult result) {
         ResponseEntity errorResponse = checkBindingResultError(result);
         if (errorResponse != null) return errorResponse;
@@ -139,7 +157,7 @@ public class MemberController {
             ErrorResponse errorResponse = new ErrorResponse();
             errorResponse.setMessage(result.getFieldError().getDefaultMessage());
             errorResponse.setStatusCode(StatusCode.BAD_REQUEST);
-            return new ResponseEntity(errorResponse, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(errorResponse, HttpStatus.OK);
         }
         return null;
     }

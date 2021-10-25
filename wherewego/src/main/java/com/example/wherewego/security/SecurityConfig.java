@@ -57,14 +57,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     //Spring Security에 CORS 및 CSRF를 구성하는 방법, 모든 사용자의 인증을 요구할지 여부, 필터(AuthTokenFilter) 및
     //작동(UsernamePasswordAuthenticationFilter 전에 필터링), 어떤 예외 핸들러가 선택되었는지 (AuthEntryPointJwt) 알려줌
     @Override
-    protected void configure(HttpSecurity http)throws Exception {
+    protected void configure(HttpSecurity http) throws Exception {
      /*   http.cors().disable()
                 .csrf().disable()
                 .formLogin().disable()
                 .headers().frameOptions().disable();*/
 
         http.csrf().disable() //토큰을 사용하기 위해
-                .authorizeRequests().antMatchers("/authenticate", "/api/members", "/api/members/verify").permitAll()
+                .authorizeRequests().antMatchers(
+                "/authenticate",
+                "/api/members",
+                "/api/members/verify",
+                "/api/members/findId",
+                "/api/members/findPw").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling()

@@ -15,7 +15,7 @@ import java.util.function.Function;
 public class JwtTokenUtil {
 
     private static final String secret = "secretKeytestauthorizationjwtmanagetokensecretKeytestauthorizationjwtmanagetokensecretKeytestauthorizationjwtmanagetoken";
-    private static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60;
+    private static final long JWT_TOKEN_VALIDITY = 10 * 60 * 60 * 1000; // 토큰 유효시간 10분
 
     public String getUsernameFromToken(String token) {
         return getClaimFromToken(token, Claims::getId);
@@ -52,7 +52,7 @@ public class JwtTokenUtil {
                 .setClaims(claims)
                 .setId(id)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
+                .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY))
                 .signWith(SignatureAlgorithm.HS512, secret)
                 .compact();
     }

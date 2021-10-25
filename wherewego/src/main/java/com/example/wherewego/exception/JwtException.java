@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class ApiException {
+public class JwtException {
     private final int statusCode;
     private final String message;
 }

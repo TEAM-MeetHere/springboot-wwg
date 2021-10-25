@@ -1,6 +1,7 @@
 package com.example.wherewego.controller;
 
 import com.example.wherewego.domain.Member;
+import com.example.wherewego.response.StatusCode;
 import com.example.wherewego.security.JwtRequestFilter;
 import com.example.wherewego.security.JwtTokenUtil;
 import com.example.wherewego.service.JwtUserDetailsService;
@@ -28,7 +29,15 @@ public class JwtAuthenticationController {
                 authenticationRequest.getEmail(), authenticationRequest.getPassword());
 
         final String token = jwtTokenUtil.generateToken(member.getEmail());
-        return ResponseEntity.ok(new JwtResponse(token));
+        return ResponseEntity.ok(new JwtResponse(
+                StatusCode.OK,
+                token,
+                member.getId(),
+                member.getEmail(),
+                member.getName(),
+                member.getAddress(),
+                member.getPhone()
+        ));
     }
 }
 
@@ -41,5 +50,11 @@ class JwtRequest {
 @Data
 @AllArgsConstructor
 class JwtResponse {
+    private int statusCode;
     private String token;
+    private Long memberId;
+    private String email;
+    private String username;
+    private String address;
+    private String phone;
 }

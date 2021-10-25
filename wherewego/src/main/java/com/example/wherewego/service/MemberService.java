@@ -70,18 +70,8 @@ public class MemberService {
     @Transactional(readOnly = true)
     public List<Member> findByEmail(String email) {
 
-        //회원 미존재 여부 확인, 미존재시 에러
-        validateNotExistMember(email);
-
         //회원이 존재한다면
         return memberRepository.findByEmail(email);
-    }
-
-    private void validateNotExistMember(String email) {
-        List<Member> findMembers = memberRepository.findByEmail(email);
-        if (findMembers.isEmpty()) {
-            throw new ApiRequestException("해당 회원이 존재하지 않습니다.");
-        }
     }
 
     //회원 탈퇴(아이디로 조회)
