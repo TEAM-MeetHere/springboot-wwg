@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,15 +28,23 @@ public class Bookmark extends Timestamped {
     @Column(name = "BOOK_DESTINATION")
     private String destination;
 
+    @Column(name = "BOOK_NAME")
+    private String name;
+
+    @Column(name = "BOOK_DATE")
+    private Date date;
+
     @JsonIgnore
     @OneToMany(mappedBy = "bookmark", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<StartAddress> startAddressList = new ArrayList<>();
 
     //== 생성 메서드 ==//
-    public static Bookmark createBookmark(Member member, String destination) {
+    public static Bookmark createBookmark(Member member, String destination, String name, Date date) {
         Bookmark bookmark = new Bookmark();
         bookmark.setMember(member);
         bookmark.setDestination(destination);
+        bookmark.setName(name);
+        bookmark.setDate(date);
         return bookmark;
     }
 

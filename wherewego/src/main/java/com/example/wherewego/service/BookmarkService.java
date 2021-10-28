@@ -29,7 +29,7 @@ public class BookmarkService {
         Long memberId = bookmarkDto.getMemberId();
         Member member = memberRepository.findOne(memberId);
 
-        Bookmark bookmark = Bookmark.createBookmark(member, bookmarkDto.getDestination());
+        Bookmark bookmark = Bookmark.createBookmark(member, bookmarkDto.getDestination(), bookmarkDto.getName(), bookmarkDto.getDate());
         bookmark.setMember(member);
         bookmarkRepository.save(bookmark);
 
