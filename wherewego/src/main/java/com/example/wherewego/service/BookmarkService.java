@@ -29,12 +29,16 @@ public class BookmarkService {
         Long memberId = bookmarkDto.getMemberId();
         Member member = memberRepository.findOne(memberId);
 
-        Bookmark bookmark = Bookmark.createBookmark(member, bookmarkDto.getDestination(), bookmarkDto.getName(), bookmarkDto.getDate());
+        Bookmark bookmark = Bookmark.createBookmark(member,
+               bookmarkDto.getPlaceName(), bookmarkDto.getUsername(),
+                bookmarkDto.getDateName(), bookmarkDto.getRoadAddressName(),
+                bookmarkDto.getAddressName(), bookmarkDto.getLat(),
+                bookmarkDto.getLon(), bookmarkDto.getDate());
         bookmark.setMember(member);
         bookmarkRepository.save(bookmark);
 
-        List<StartAddressDto> startAddressDtoList = bookmarkDto.getStartAddressDtoList();
-        for (StartAddressDto startAddressDto : startAddressDtoList) {
+        List<StartAddressDto> startAddressList = bookmarkDto.getStartAddressList();
+        for (StartAddressDto startAddressDto : startAddressList) {
             StartAddress startAddress = StartAddress.createStartAddress(bookmark, startAddressDto);
             startAddressRepository.save(startAddress);
         }
@@ -56,8 +60,12 @@ public class BookmarkService {
 
         for (StartAddress startAddress : allByBookmarkId) {
             StartAddressDto startAddressDto = new StartAddressDto();
-            startAddressDto.setName(startAddress.getName());
-            startAddressDto.setAddress(startAddress.getAddress());
+            startAddressDto.setPlaceName(startAddress.getPlaceName());
+            startAddressDto.setUsername(startAddress.getUsername());
+            startAddressDto.setRoadAddressName(startAddress.getRoadAddressName());
+            startAddressDto.setAddressName(startAddress.getAddressName());
+            startAddressDto.setLat(startAddress.getLat());
+            startAddressDto.setLon(startAddressDto.getLon());
             startAddressDtoList.add(startAddressDto);
         }
         return startAddressDtoList;

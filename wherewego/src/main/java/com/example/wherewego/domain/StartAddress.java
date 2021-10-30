@@ -4,6 +4,7 @@ import com.example.wherewego.dto.StartAddressDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.IndexColumn;
 
 import javax.persistence.*;
 
@@ -23,11 +24,24 @@ public class StartAddress {
     @JoinColumn(name = "BOOK_ID")
     private Bookmark bookmark;
 
-    @Column(name = "ST_NAME")
-    private String name;
+    @Column(name = "ST_USERNAME")
+    private String username;
 
-    @Column(name = "ST_ADDRESS")
-    private String address;
+    @Column(name = "ST_PLACE_NAME")
+    private String placeName;
+
+    @Column(name = "ST_ROAD_ADDRESS_NAME")
+    private String roadAddressName;
+
+    @Column(name = "ST_ADDRESS_NAME")
+    private String addressName;
+
+    @Column(name = "ST_LAT")
+    private double lat;
+
+    @Column(name = "ST_LON")
+    private double lon;
+
 
     //== 연관관계 메서드 ==//
     public void setBookmark(Bookmark bookmark) {
@@ -39,8 +53,12 @@ public class StartAddress {
     public static StartAddress createStartAddress(Bookmark bookmark, StartAddressDto startAddressDto) {
         StartAddress startAddress = new StartAddress();
         startAddress.setBookmark(bookmark);
-        startAddress.setName(startAddressDto.getName());
-        startAddress.setAddress(startAddressDto.getAddress());
+        startAddress.setUsername(startAddressDto.getUsername());
+        startAddress.setPlaceName(startAddressDto.getPlaceName());
+        startAddress.setRoadAddressName(startAddressDto.getRoadAddressName());
+        startAddress.setAddressName(startAddressDto.getAddressName());
+        startAddress.setLat(startAddressDto.getLat());
+        startAddress.setLon(startAddressDto.getLon());
         return startAddress;
     }
 }
