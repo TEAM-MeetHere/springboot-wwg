@@ -38,4 +38,4 @@ out/
 build.gradle
 
 ### my ignore ###
-src/main/resources/application.yml
+wherewego/src/main/resources/application.yml
