@@ -13,6 +13,11 @@ import java.util.List;
 @Setter
 public class ShareDto {
 
-    private String destination;
+    private String placeName;
+    private String username;
+    private String roadAddressName;
+    private String addressName;
+    private double lat;
+    private double lon;
     private List<ShareAddressDto> shareAddressDtoList;
 }

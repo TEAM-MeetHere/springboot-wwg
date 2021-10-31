@@ -20,21 +20,37 @@ public class ShareAddress {
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "SH_ID")
+    @JoinColumn(name = "SA_SHARE")
     private Share share;
 
-    @Column(name = "SA_NAME")
-    private String name;
+    @Column(name = "SA_PLACE_NAME")
+    private String placeName;
 
-    @Column(name = "SA_ADDRESS")
-    private String address;
+    @Column(name = "SA_USERNAME")
+    private String username;
+
+    @Column(name = "SA_ROAD_ADDRESS_NAME")
+    private String roadAddressName;
+
+    @Column(name = "SA_ADDRESS_NAME")
+    private String addressName;
+
+    @Column(name = "SA_LAT")
+    private double lat;
+
+    @Column(name = "SA_LON")
+    private double lon;
 
     //== 생성 메서드 ==//
     public static ShareAddress createShareAddress(Share share, ShareAddressDto shareAddressDto) {
         ShareAddress shareAddress = new ShareAddress();
         shareAddress.setShare(share);
-        shareAddress.setName(shareAddressDto.getName());
-        shareAddress.setAddress(shareAddressDto.getAddress());
+        shareAddress.setPlaceName(shareAddressDto.getPlaceName());
+        shareAddress.setUsername(shareAddressDto.getUsername());
+        shareAddress.setRoadAddressName(shareAddressDto.getRoadAddressName());
+        shareAddress.setAddressName(shareAddressDto.getAddressName());
+        shareAddress.setLat(shareAddressDto.getLat());
+        shareAddress.setLon(shareAddressDto.getLon());
         return shareAddress;
     }
 

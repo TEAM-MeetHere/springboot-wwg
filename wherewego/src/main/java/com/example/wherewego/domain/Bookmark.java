@@ -21,7 +21,7 @@ public class Bookmark extends Timestamped {
     @Column(name = "BOOK_ID")
     private Long id;
 
-//    @JsonIgnore
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MEM_ID")
     private Member member;
@@ -50,7 +50,7 @@ public class Bookmark extends Timestamped {
     @Column(name = "BOOK_DATE")
     private String date;
 
-//    @JsonIgnore
+    @JsonIgnore
     @OneToMany(mappedBy = "bookmark", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<StartAddress> startAddressList = new ArrayList<>();
 

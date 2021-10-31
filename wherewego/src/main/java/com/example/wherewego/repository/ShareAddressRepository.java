@@ -26,9 +26,9 @@ public class ShareAddressRepository {
     }
 
     //공유코드로 공유주소 불러오기
-    public List<ShareAddress> findByShareCode(String shareCode){
-        return em.createQuery("select s from ShareAddress s where s.share.code =:shareCode")
-                .setParameter("shareCode", shareCode)
+    public List<ShareAddress> findByShareCode(Long shareId){
+        return em.createQuery("select s from ShareAddress s where s.share.id =:shareId")
+                .setParameter("shareId", shareId)
                 .getResultList();
     }
 }

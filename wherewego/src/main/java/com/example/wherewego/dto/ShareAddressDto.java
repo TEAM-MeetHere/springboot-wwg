@@ -11,6 +11,10 @@ import lombok.Setter;
 @Setter
 public class ShareAddressDto {
 
-    private String name;
-    private String address;
+    private String placeName;
+    private String username;
+    private String roadAddressName;
+    private String addressName;
+    private double lat;
+    private double lon;
 }

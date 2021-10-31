@@ -42,25 +42,22 @@ public class ShareService {
         return share;
     }
 
-    //공유 코드에 해당하는 출발 주소 리스트
+    //공유 코드에 해당하는 도착 주소
     @Transactional(readOnly = true)
-    public List<ShareAddressDto> findShareList(String shareCode){
-        List<ShareAddress> byShareCode = shareAddressRepository.findByShareCode(shareCode);
-        if (byShareCode.isEmpty()) {
+    public List<Share> findShareList(String shareCode){
+        List<Share> shareByRandomCode = shareRepository.findShareByRandomCode(shareCode);
+        if (shareByRandomCode.isEmpty()) {
             throw new ApiRequestException("잘못된 랜덤코드 입니다.");
         }
-
-        List<ShareAddressDto> shareAddressDtoList = new ArrayList<>();
-
-        for (ShareAddress shareAddress : byShareCode) {
-            ShareAddressDto shareAddressDto = new ShareAddressDto();
-            shareAddressDto.setName(shareAddress.getName());
-            shareAddressDto.setAddress(shareAddress.getAddress());
-            shareAddressDtoList.add(shareAddressDto);
-        }
-
-        return shareAddressDtoList;
+        return shareByRandomCode;
     }
+
+    //공유코드 아이디에 해당하는 출발 주소 리스트
+    @Transactional(readOnly = true)
+    public List<ShareAddress> findShareAddressList(Long shareId) {
+        return shareAddressRepository.findByShareCode(shareId);
+    }
+
 
     private boolean isCodeUnique(Share share) {
         List<Share> shareByRandomCode = shareRepository.findShareByRandomCode(share.getCode());

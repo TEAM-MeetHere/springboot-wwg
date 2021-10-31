@@ -1,6 +1,7 @@
 package com.example.wherewego.controller;
 
 import com.example.wherewego.domain.Share;
+import com.example.wherewego.domain.ShareAddress;
 import com.example.wherewego.dto.ShareAddressDto;
 import com.example.wherewego.dto.ShareDto;
 import com.example.wherewego.exception.ErrorResponse;
@@ -36,15 +37,23 @@ public class ShareController {
 
         Share share = shareService.save(shareDto);
         return new ResponseEntity(DefaultRes.res(StatusCode.CREATED,
-                ResponseMessage.RANDOMCODE_CREATED, share), HttpStatus.CREATED);
+                ResponseMessage.RANDOMCODE_CREATED, share), HttpStatus.OK);
     }
 
-    //공유코드 내용 불러오기
-    @GetMapping("/share/load")
-    public ResponseEntity shareAddressList(@RequestParam String code) {
-        List<ShareAddressDto> shareAddressList = shareService.findShareList(code);
+    //공유코드 내용(도착지점) 불러오기
+    @GetMapping("/share/destination")
+    public ResponseEntity shareDestination(@RequestParam String code) {
+        List<Share> shareAddressList = shareService.findShareList(code);
         return new ResponseEntity(DefaultRes.res(StatusCode.OK,
-                ResponseMessage.RANCOMCODE_SEARCH_SUCCESS, shareAddressList), HttpStatus.FOUND);
+                ResponseMessage.RANCOMCODE_SEARCH_SUCCESS, shareAddressList.get(0)), HttpStatus.OK);
+    }
+
+    //공유코드 내용(출발지점) 불러오기
+    @GetMapping("/share/start")
+    public ResponseEntity shareAddressList(@RequestParam Long shareId) {
+        List<ShareAddress> shareAddressList = shareService.findShareAddressList(shareId);
+        return new ResponseEntity(DefaultRes.res(StatusCode.OK,
+                ResponseMessage.RANCOMCODE_SEARCH_SUCCESS, shareAddressList), HttpStatus.OK);
     }
 
     //valid 에 어긋난 에러 체크

@@ -24,8 +24,23 @@ public class Share extends Timestamped {
     @Column(name = "SH_CODE")
     private String code;
 
-    @Column(name = "SH_DESTINATION")
-    private String destination;
+    @Column(name = "SH_PLACENAME")
+    private String placeName;
+
+    @Column(name = "SH_USERNAME")
+    private String username;
+
+    @Column(name = "SH_ROAD_ADDRESS_NAME")
+    private String roadAddressName;
+
+    @Column(name = "SH_ADDRESS_NAME")
+    private String addressName;
+
+    @Column(name = "SH_LAT")
+    private double lat;
+
+    @Column(name = "SH_LON")
+    private double lon;
 
     @JsonIgnore
     @OneToMany(mappedBy = "share", cascade = CascadeType.REMOVE, orphanRemoval = true)
@@ -34,7 +49,12 @@ public class Share extends Timestamped {
     //== 생성 메서드 ==//
     public static Share createShare(ShareDto shareDto) {
         Share share = new Share();
-        share.setDestination(shareDto.getDestination());
+        share.setPlaceName(shareDto.getPlaceName());
+        share.setUsername(shareDto.getUsername());
+        share.setRoadAddressName(shareDto.getRoadAddressName());
+        share.setAddressName(shareDto.getAddressName());
+        share.setLat(shareDto.getLat());
+        share.setLon(shareDto.getLon());
 
         //랜덤코드 생성 후, 적용
         String randomCode = makeRandomCode();
