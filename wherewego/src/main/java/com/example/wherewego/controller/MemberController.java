@@ -90,7 +90,7 @@ public class MemberController {
 
 //        memberService.join(memberDto, active, code);
         return new ResponseEntity(DefaultRes.res(StatusCode.CREATED,
-                ResponseMessage.SEND_CODE, memberDto), HttpStatus.CREATED);
+                ResponseMessage.SEND_CODE, member), HttpStatus.CREATED);
     }
 
     //회원가입 인증

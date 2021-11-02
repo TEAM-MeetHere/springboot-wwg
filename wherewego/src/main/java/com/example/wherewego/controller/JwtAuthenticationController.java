@@ -1,5 +1,6 @@
 package com.example.wherewego.controller;
 
+import com.example.wherewego.domain.AddressObject;
 import com.example.wherewego.domain.Member;
 import com.example.wherewego.response.StatusCode;
 import com.example.wherewego.security.JwtRequestFilter;
@@ -35,8 +36,8 @@ public class JwtAuthenticationController {
                 member.getId(),
                 member.getEmail(),
                 member.getName(),
-                member.getAddress(),
-                member.getPhone()
+                member.getPhone(),
+                member.getAddressObject()
         ));
     }
 }
@@ -55,6 +56,6 @@ class JwtResponse {
     private Long memberId;
     private String email;
     private String username;
-    private String address;
     private String phone;
+    private AddressObject addressObject;
 }

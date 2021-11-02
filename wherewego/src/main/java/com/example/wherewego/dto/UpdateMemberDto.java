@@ -1,5 +1,6 @@
 package com.example.wherewego.dto;
 
+import com.example.wherewego.domain.AddressObject;
 import com.example.wherewego.valid.ValidationGroups;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,8 +28,7 @@ public class UpdateMemberDto {
     @NotBlank(message = "이름을 입력해주세요.")
     private String name;
 
-    @NotBlank(message = "주소를 입력해주세요.")
-    private String address;
+    private AddressObject addressObject;
 
     @Pattern(regexp = "^01([0|1|6|7|8|9])-([0-9]{3,4})-([0-9]{4})$",
             message = "번호의 형식에 맞게 입력해주세요.",

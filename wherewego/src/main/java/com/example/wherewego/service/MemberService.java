@@ -1,9 +1,11 @@
 package com.example.wherewego.service;
 
+import com.example.wherewego.domain.AddressObject;
 import com.example.wherewego.domain.Member;
 import com.example.wherewego.dto.MemberDto;
 import com.example.wherewego.dto.UpdateMemberDto;
 import com.example.wherewego.exception.ApiRequestException;
+import com.example.wherewego.repository.AddressObjectRepository;
 import com.example.wherewego.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,6 +20,7 @@ import java.util.List;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final AddressObjectRepository addressObjectRepository;
     private final PasswordEncoder passwordEncoder;
 
     //회원가입
@@ -33,7 +36,19 @@ public class MemberService {
         member.setPw(password);
         member.setActivated(activated);
         member.setVerification(code);
+
+        AddressObject addressObject = AddressObject.createAddressObject(
+                member, memberDto.getAddressObject().getPlaceName(),
+                memberDto.getAddressObject().getRoadAddressName(),
+                memberDto.getAddressObject().getAddressName(),
+                memberDto.getAddressObject().getLat(),
+                memberDto.getAddressObject().getLon()
+        );
+
+        addressObjectRepository.save(addressObject);
+        member.setAddressObject(addressObject);
         memberRepository.save(member);
+
         return member;
     }
 
@@ -125,7 +140,7 @@ public class MemberService {
         String pw1 = updateMemberDto.getPw1();
         String pw2 = updateMemberDto.getPw2();
         String name = updateMemberDto.getName();
-        String address = updateMemberDto.getAddress();
+        AddressObject address = updateMemberDto.getAddressObject();
         String phone = updateMemberDto.getPhone();
 
         if (!pw1.equals(pw2)) {
@@ -142,8 +157,11 @@ public class MemberService {
 
         member.setPw(password);
         member.setName(name);
-        member.setAddress(address);
+        member.setAddressObject(address);
         member.setPhone(phone);
+        member.setAddressObject(address);
+
+        address.setMember(member);
 
         return member;
     }
