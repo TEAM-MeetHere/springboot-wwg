@@ -52,7 +52,7 @@ public class BookmarkController {
     public ResponseEntity bookmarkAddressList(@RequestParam Long bookmarkId) {
         List<StartAddressDto> startAddressDtoList = bookmarkService.findStartAddress(bookmarkId);
         return new ResponseEntity(DefaultRes.res(StatusCode.OK,
-                ResponseMessage.BOOKMARK_SEARCH_SUCCESS, startAddressDtoList), HttpStatus.FOUND);
+                ResponseMessage.BOOKMARK_SEARCH_SUCCESS, startAddressDtoList), HttpStatus.OK);
     }
 
 

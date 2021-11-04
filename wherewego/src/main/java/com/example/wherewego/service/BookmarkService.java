@@ -65,7 +65,7 @@ public class BookmarkService {
             startAddressDto.setRoadAddressName(startAddress.getRoadAddressName());
             startAddressDto.setAddressName(startAddress.getAddressName());
             startAddressDto.setLat(startAddress.getLat());
-            startAddressDto.setLon(startAddressDto.getLon());
+            startAddressDto.setLon(startAddress.getLon());
             startAddressDtoList.add(startAddressDto);
         }
         return startAddressDtoList;
