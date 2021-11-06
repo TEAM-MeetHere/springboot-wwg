@@ -58,6 +58,22 @@ public class ShareService {
         return shareAddressRepository.findByShareCode(shareId);
     }
 
+    //회원 이름으로 공유코드 찾기
+    @Transactional(readOnly = true)
+    public List<Share> findShareByUsername(String username) {
+        return shareRepository.findShareByUsername(username);
+    }
+
+    //공유코드 삭제
+    @Transactional
+    public void deleteShare(Long shareId) {
+        List<ShareAddress> shareAddressList = shareAddressRepository.findByShareCode(shareId);
+        for (ShareAddress shareAddress : shareAddressList) {
+            shareAddressRepository.deleteShareAddress(shareAddress.getId());
+        }
+        shareRepository.deleteShare(shareId);
+    }
+
 
     private boolean isCodeUnique(Share share) {
         List<Share> shareByRandomCode = shareRepository.findShareByRandomCode(share.getCode());

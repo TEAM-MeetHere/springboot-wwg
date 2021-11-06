@@ -92,6 +92,8 @@ public class MemberService {
     //회원 탈퇴(아이디로 조회)
     @Transactional
     public void deleteMember(Long id) {
+        Member member = findOne(id);
+        addressObjectRepository.deleteAddressObject(member.getAddressObject().getId());
         memberRepository.deleteMember(id);
     }
 

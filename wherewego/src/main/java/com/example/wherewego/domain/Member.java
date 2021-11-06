@@ -50,6 +50,10 @@ public class Member extends Timestamped {
     @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Bookmark> bookmarkList = new ArrayList<>();
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Friend> friendList = new ArrayList<>();
+
     //== 생성 메서드==//
     public static Member createMember(MemberDto memberDto) {
 

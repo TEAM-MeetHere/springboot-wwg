@@ -31,9 +31,15 @@ public class BookmarkRepository {
     }
 
     //회원 아이디로 즐찾 정보 찾기
-    public List<Bookmark> findByMemberId(Long memberId) {
+    public List<Bookmark> findBookmarkListByMemberId(Long memberId) {
         return em.createQuery("select b from Bookmark b where b.member.id =:memberId", Bookmark.class)
                 .setParameter("memberId", memberId)
                 .getResultList();
+    }
+
+    //즐찾 삭제
+    public void deleteBookmark(Long id) {
+        Bookmark bookmark = em.find(Bookmark.class, id);
+        em.remove(bookmark);
     }
 }

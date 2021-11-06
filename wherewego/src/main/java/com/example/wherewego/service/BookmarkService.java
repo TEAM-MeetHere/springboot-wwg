@@ -49,7 +49,7 @@ public class BookmarkService {
     //해당 멤버의 즐겨찾기 목록
     @Transactional(readOnly = true)
     public List<Bookmark> findBookmarkList(Long memberId) {
-        return bookmarkRepository.findByMemberId(memberId);
+        return bookmarkRepository.findBookmarkListByMemberId(memberId);
     }
 
     //즐겨찾기에 해당하는 출발 주소 리스트
@@ -69,5 +69,15 @@ public class BookmarkService {
             startAddressDtoList.add(startAddressDto);
         }
         return startAddressDtoList;
+    }
+
+    //즐겨찾기 삭제
+    @Transactional
+    public void deleteBookmark(Long bookmarkId) {
+        List<StartAddress> startAddressList = startAddressRepository.findAllByBookmarkId(bookmarkId);
+        for (StartAddress startAddress : startAddressList) {
+            startAddressRepository.deleteStartAddress(startAddress.getId());
+        }
+        bookmarkRepository.deleteBookmark(bookmarkId);
     }
 }

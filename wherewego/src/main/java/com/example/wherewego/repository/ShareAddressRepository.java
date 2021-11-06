@@ -31,4 +31,9 @@ public class ShareAddressRepository {
                 .setParameter("shareId", shareId)
                 .getResultList();
     }
+
+    public void deleteShareAddress(Long id) {
+        ShareAddress shareAddress = em.find(ShareAddress.class, id);
+        em.remove(shareAddress);
+    }
 }

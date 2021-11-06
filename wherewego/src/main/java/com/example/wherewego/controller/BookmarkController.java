@@ -55,7 +55,13 @@ public class BookmarkController {
                 ResponseMessage.BOOKMARK_SEARCH_SUCCESS, startAddressDtoList), HttpStatus.OK);
     }
 
-
+    //즐겨찾기 삭제
+    @DeleteMapping("/bookmark/delete")
+    public ResponseEntity deleteBookmark(@RequestParam Long bookmarkId) {
+        bookmarkService.deleteBookmark(bookmarkId);
+        return new ResponseEntity(DefaultRes.res(StatusCode.OK,
+                ResponseMessage.BOOKMARK_DELETE, "즐겨찾기 삭제 성공"), HttpStatus.OK);
+    }
 
     //valid 에 어긋난 에러 체크
     private ResponseEntity checkBindingResultError(BindingResult result) {

@@ -15,10 +15,16 @@ public class ResponseMessage {
 
     public static final String BOOKMARK_INSERT_SUCCESS = "즐겨찾기 저장 성공";
     public static final String BOOKMARK_SEARCH_SUCCESS = "즐겨찾기 조회 성공";
+    public static final String BOOKMARK_DELETE = "즐겨찾기 삭제 성공";
 
     public static final String RANDOMCODE_CREATED = "랜덤코드 생성 성공";
     public static final String RANCOMCODE_SEARCH_SUCCESS = "랜덤코드 내용 조회 성공";
 
     public static final String SEND_CODE = "인증번호 발송";
     public static final String VERIFY_FAIL = "올바른 인증번호가 아닙니다.";
+
+    public static final String FRIEND_FIND = "친구 찾기 성공";
+    public static final String FRIEND_SAVE = "친구 추가 성공";
+    public static final String FRIEND_LIST = "친구 목록 불러오기 성공";
+    public static final String FRIEND_DELETE = "회원 삭제 성공";
 }

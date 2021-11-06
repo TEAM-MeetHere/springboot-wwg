@@ -1,14 +1,16 @@
 package com.example.wherewego.controller;
 
+import com.example.wherewego.domain.Bookmark;
+import com.example.wherewego.domain.Friend;
 import com.example.wherewego.domain.Member;
+import com.example.wherewego.domain.Share;
 import com.example.wherewego.dto.*;
 import com.example.wherewego.exception.ApiRequestException;
 import com.example.wherewego.exception.ErrorResponse;
 import com.example.wherewego.response.DefaultRes;
 import com.example.wherewego.response.ResponseMessage;
 import com.example.wherewego.response.StatusCode;
-import com.example.wherewego.service.EmailService;
-import com.example.wherewego.service.MemberService;
+import com.example.wherewego.service.*;
 import com.example.wherewego.valid.ValidationSequence;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +31,9 @@ public class MemberController {
 
     private final MemberService memberService;
     private final EmailService emailService;
+    private final FriendService friendService;
+    private final BookmarkService bookmarkService;
+    private final ShareService shareService;
 
     //전체 회원 리스트
     @GetMapping("/memberList")
@@ -47,7 +52,7 @@ public class MemberController {
 
         Member member = memberService.findByEmail(loginDto.getEmail()).get(0);
 
-        if (member == null || member.getActivated() == "FALSE") {
+        if (member == null || member.getActivated().equals("FALSE")) {
             throw new ApiRequestException("해당 회원이 존재하지 않습니다.");
         }
 
@@ -88,7 +93,6 @@ public class MemberController {
         MailDto mailDto = emailService.verification(memberDto.getEmail(), memberDto.getName(), member.getVerification());
         emailService.mailSend(mailDto);
 
-//        memberService.join(memberDto, active, code);
         return new ResponseEntity(DefaultRes.res(StatusCode.CREATED,
                 ResponseMessage.SEND_CODE, member), HttpStatus.CREATED);
     }
@@ -146,9 +150,70 @@ public class MemberController {
     //회원 탈퇴
     @DeleteMapping("/members/delete")
     public ResponseEntity deleteMember(@RequestParam Long memberId) {
+
+        Member member = memberService.findOne(memberId);
+        //회원 관련 모든 데이터 삭제
+
+        //1. 친구 리스트 삭제
+        List<Friend> friendList = friendService.findFriendList(memberId);
+        for (Friend friend : friendList) {
+            friendService.deleteFriend(friend.getId());
+        }
+
+        //다른 회원의 친구목록에서도 탈퇴한 회원 삭제 필요
+        List<Friend> findMemberByEmail = friendService.findMemberInFriendListByEmail(member.getEmail());
+        for (Friend friend : findMemberByEmail) {
+            friendService.deleteFriend(friend.getId());
+        }
+
+
+        //2. 북마크 리스트 삭제
+        List<Bookmark> bookmarkList = bookmarkService.findBookmarkList(memberId);
+        for (Bookmark bookmark : bookmarkList) {
+            bookmarkService.deleteBookmark(bookmark.getId());
+        }
+
+        //3. 공유 리스트 삭제
+        List<Share> shareList = shareService.findShareByUsername(member.getName());
+        for (Share share : shareList) {
+            shareService.deleteShare(share.getId());
+        }
+
         memberService.deleteMember(memberId);
         return new ResponseEntity(DefaultRes.res(StatusCode.OK,
                 ResponseMessage.DELETE_USER, "회원 탈퇴 성공"), HttpStatus.OK);
+    }
+
+    //친구 찾기
+    @GetMapping("/friend/find")
+    public ResponseEntity findFriend(@RequestParam String email, String name, String phone) {
+        Long friendId = friendService.findFriend(email, name, phone);
+        return new ResponseEntity(DefaultRes.res(StatusCode.OK,
+                ResponseMessage.FRIEND_FIND, friendId), HttpStatus.OK);
+    }
+
+    //친구 추가
+    @PostMapping("/friend/save")
+    public ResponseEntity postFriend(@RequestParam Long memberId, Long friendId) {
+        Friend friend = friendService.save(memberId, friendId);
+        return new ResponseEntity(DefaultRes.res(StatusCode.CREATED,
+                ResponseMessage.FRIEND_SAVE, friend), HttpStatus.OK);
+    }
+
+    //회원의 친구 목록
+    @GetMapping("/friend/list")
+    public ResponseEntity friendList(@RequestParam Long memberId) {
+        List<Friend> friendList = friendService.findFriendList(memberId);
+        return new ResponseEntity(DefaultRes.res(StatusCode.OK,
+                ResponseMessage.FRIEND_LIST, friendList), HttpStatus.OK);
+    }
+
+    //친구 삭제
+    @DeleteMapping("/friend/delete")
+    public ResponseEntity deleteFriend(@RequestParam Long friendId) {
+        friendService.deleteFriend(friendId);
+        return new ResponseEntity(DefaultRes.res(StatusCode.OK,
+                ResponseMessage.FRIEND_DELETE, "친구 삭제 성공"), HttpStatus.OK);
     }
 
     //valid 에 어긋난 에러 체크

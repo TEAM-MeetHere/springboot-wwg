@@ -31,4 +31,10 @@ public class StartAddressRepository {
                 .setParameter("bookmarkId", bookmarkId)
                 .getResultList();
     }
+
+    //출발 주소 삭제
+    public void deleteStartAddress(Long id) {
+        StartAddress startAddress = em.find(StartAddress.class, id);
+        em.remove(startAddress);
+    }
 }

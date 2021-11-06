@@ -36,4 +36,17 @@ public class ShareRepository {
                 .setParameter("randomCode", randomCode)
                 .getResultList();
     }
+
+    //회원 이름으로 공유코드 확인
+    public List<Share> findShareByUsername(String username) {
+        return em.createQuery("select s from Share s where s.username =:username")
+                .setParameter("username", username)
+                .getResultList();
+    }
+
+    //공유코드 삭제
+    public void deleteShare(Long id) {
+        Share share = em.find(Share.class, id);
+        em.remove(share);
+    }
 }
