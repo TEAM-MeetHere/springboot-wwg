@@ -15,6 +15,7 @@ public class ResponseMessage {
 
     public static final String BOOKMARK_INSERT_SUCCESS = "즐겨찾기 저장 성공";
     public static final String BOOKMARK_SEARCH_SUCCESS = "즐겨찾기 조회 성공";
+    public static final String UPDATE_BOOKMARK = "즐겨찾기 수정 성공";
     public static final String BOOKMARK_DELETE = "즐겨찾기 삭제 성공";
 
     public static final String RANDOMCODE_CREATED = "랜덤코드 생성 성공";

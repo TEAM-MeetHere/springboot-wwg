@@ -3,6 +3,7 @@ package com.example.wherewego.controller;
 import com.example.wherewego.domain.Bookmark;
 import com.example.wherewego.dto.BookmarkDto;
 import com.example.wherewego.dto.StartAddressDto;
+import com.example.wherewego.dto.UpdateBookmarkDto;
 import com.example.wherewego.exception.ErrorResponse;
 import com.example.wherewego.response.DefaultRes;
 import com.example.wherewego.response.ResponseMessage;
@@ -53,6 +54,14 @@ public class BookmarkController {
         List<StartAddressDto> startAddressDtoList = bookmarkService.findStartAddress(bookmarkId);
         return new ResponseEntity(DefaultRes.res(StatusCode.OK,
                 ResponseMessage.BOOKMARK_SEARCH_SUCCESS, startAddressDtoList), HttpStatus.OK);
+    }
+
+    //즐겨찾기 수정
+    @PostMapping("/bookmark/update")
+    public ResponseEntity updateBookmark(@RequestBody UpdateBookmarkDto updateBookmarkDto) {
+        Bookmark bookmark = bookmarkService.updateBookmark(updateBookmarkDto);
+        return new ResponseEntity(DefaultRes.res(StatusCode.OK,
+                ResponseMessage.UPDATE_BOOKMARK, bookmark), HttpStatus.OK);
     }
 
     //즐겨찾기 삭제

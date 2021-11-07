@@ -5,6 +5,7 @@ import com.example.wherewego.domain.Member;
 import com.example.wherewego.domain.StartAddress;
 import com.example.wherewego.dto.BookmarkDto;
 import com.example.wherewego.dto.StartAddressDto;
+import com.example.wherewego.dto.UpdateBookmarkDto;
 import com.example.wherewego.repository.BookmarkRepository;
 import com.example.wherewego.repository.MemberRepository;
 import com.example.wherewego.repository.StartAddressRepository;
@@ -71,8 +72,20 @@ public class BookmarkService {
         return startAddressDtoList;
     }
 
+    //즐겨찾기 정보 수정
+    public Bookmark updateBookmark(UpdateBookmarkDto updateBookmarkDto) {
+        Long bookmarkId = updateBookmarkDto.getBookmarkId();
+        String dateName = updateBookmarkDto.getDateName();
+        String date = updateBookmarkDto.getDate();
+
+        Bookmark bookmark = bookmarkRepository.findOne(bookmarkId);
+        bookmark.setDateName(dateName);
+        bookmark.setDate(date);
+
+        return bookmark;
+    }
+
     //즐겨찾기 삭제
-    @Transactional
     public void deleteBookmark(Long bookmarkId) {
         List<StartAddress> startAddressList = startAddressRepository.findAllByBookmarkId(bookmarkId);
         for (StartAddress startAddress : startAddressList) {
