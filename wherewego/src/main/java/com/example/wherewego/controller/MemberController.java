@@ -147,6 +147,19 @@ public class MemberController {
                 ResponseMessage.UPDATE_USER, member), HttpStatus.OK);
     }
 
+    //회원 정보 가져오기
+    @GetMapping("/members/find")
+    public ResponseEntity findMember(@RequestParam Long memberId) {
+        Member member = memberService.findOne(memberId);
+        MemberDto memberDto = new MemberDto();
+        memberDto.setEmail(member.getEmail());
+        memberDto.setName(member.getName());
+        memberDto.setPhone(member.getPhone());
+        memberDto.setAddressObject(member.getAddressObject());
+        return new ResponseEntity(DefaultRes.res(StatusCode.OK,
+                ResponseMessage.READ_USER, memberDto), HttpStatus.OK);
+    }
+
     //회원 탈퇴
     @DeleteMapping("/members/delete")
     public ResponseEntity deleteMember(@RequestParam Long memberId) {

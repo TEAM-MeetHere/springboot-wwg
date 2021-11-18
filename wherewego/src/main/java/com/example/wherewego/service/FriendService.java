@@ -50,6 +50,15 @@ public class FriendService {
 
         Member member = memberRepository.findOne(memberId);
 
+        //이미 친구목록에 존재하는 친구를 추가하려는 경우
+        List<Friend> friendList = member.getFriendList();
+        for (Friend friend : friendList) {
+            if (friend.getEmail().equals(findMember.getEmail()) && friend.getName().equals(findMember.getName())) {
+                throw new ApiRequestException("이미 친구목록에 존재하는 회원입니다.");
+            }
+        }
+
+
         Friend friend = Friend.createFriend(
                 member, friendDto.getEmail(), friendDto.getName(), friendDto.getPhone());
         friend.setMember(member);
