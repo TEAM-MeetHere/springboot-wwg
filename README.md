@@ -25,16 +25,17 @@
 >https://www.youtube.com/watch?v=H4BQfypaPi0
 ------------
 ## 적용 기술 및 구현 기능
-###프론트엔드
+
+### 프론트엔드
 1. 안드로이드 스튜디오(kotlin)
 2. 카카오맵 API
 3. ODSAY API(상세경로 API)
-###백엔드
+### 백엔드
 1. java, spring framework
 2. aws(EC2, RDS)
 3. h2, mysql
 4. JWT
-###구현 기능
+### 구현 기능
 1. 로그인/회원가입
    + 사용자가 회원가입시, 입력 정보를 저장하여 로그인 이후 어플리케이션 사용 가능
      + Bcrypt를 통해 비밀번호 암호화
@@ -55,6 +56,6 @@
     + 다른 유조를 친구 목록에 저장하여, 출발지 정보를 추가할 경우 친구 이름 및 주소를 가져오는 기능 제공, 현재 위치 요청 및 응답, 공유코드 전송 가능
 + AWS EC2(Ubuntu)에 서버 배포
 + AWS RDS에 DB 설정, EC2 서버와 연결
-
+----
 ## API 문서
 >https://github.com/TEAM-MeetHere/springboot-wwg/blob/main/WWG_API%20%EC%A0%95%EC%9D%98%EC%84%9C.docx
